@@ -16,11 +16,78 @@
             </div>
         </section>
 
+        <section class="input-summary">
+            <div>
+                <span class="card-label">Входные данные</span>
+                <h2>Что отправил пользователь</h2>
+            </div>
+            <div class="input-grid">
+                <article>
+                    <span>Тема</span>
+                    <strong>{{ result.meta.topic }}</strong>
+                </article>
+                <article>
+                    <span>Аудитория</span>
+                    <strong>{{ result.meta.audience }}</strong>
+                </article>
+                <article>
+                    <span>Площадка</span>
+                    <strong>{{ result.meta.platform }}</strong>
+                </article>
+                <article>
+                    <span>Стиль</span>
+                    <strong>{{ result.meta.style }}</strong>
+                </article>
+            </div>
+        </section>
+
+        <section class="result-section">
+            <div class="section-heading">
+                <span class="card-label">Готовый результат</span>
+                <h2>Идея и структура поста</h2>
+            </div>
+
+            <div class="result-grid">
+                <article class="result-card result-card--wide">
+                    <span class="card-label">Заголовок</span>
+                    <h2>{{ result.title }}</h2>
+                </article>
+
+                <article class="result-card result-card--wide">
+                    <span class="card-label">Короткое вступление</span>
+                    <p>{{ result.intro }}</p>
+                </article>
+
+                <article class="result-card">
+                    <span class="card-label">Структура</span>
+                    <ol class="structure-list">
+                        {% for item in result.structure %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ol>
+                </article>
+
+                <article class="result-card">
+                    <span class="card-label">Призыв к действию</span>
+                    <p class="cta-text">{{ result.cta }}</p>
+                </article>
+
+                <article class="result-card result-card--wide">
+                    <span class="card-label">Хэштеги</span>
+                    <div class="hashtags">
+                        {% for tag in result.hashtags %}
+                            <span>{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                </article>
+            </div>
+        </section>
+
         <section class="copy-panel">
             <div class="copy-panel__header">
                 <div>
-                    <span class="card-label">Итоговый пост</span>
-                    <h2>Готовый блок для копирования</h2>
+                    <span class="card-label">Единый текст для копирования</span>
+                    <h2>Готовый пост одним блоком</h2>
                 </div>
                 <button class="gradient-button copy-button" type="button" data-copy-button>
                     Скопировать пост
@@ -28,41 +95,6 @@
             </div>
             <pre class="post-preview" id="final-post">{{ result.full_post }}</pre>
             <p class="copy-status" data-copy-status aria-live="polite"></p>
-        </section>
-
-        <section class="result-grid">
-            <article class="result-card result-card--wide">
-                <span class="card-label">Заголовок</span>
-                <h2>{{ result.title }}</h2>
-            </article>
-
-            <article class="result-card result-card--wide">
-                <span class="card-label">Короткое вступление</span>
-                <p>{{ result.intro }}</p>
-            </article>
-
-            <article class="result-card">
-                <span class="card-label">Структура</span>
-                <ol class="structure-list">
-                    {% for item in result.structure %}
-                        <li>{{ item }}</li>
-                    {% endfor %}
-                </ol>
-            </article>
-
-            <article class="result-card">
-                <span class="card-label">Призыв к действию</span>
-                <p class="cta-text">{{ result.cta }}</p>
-            </article>
-
-            <article class="result-card result-card--wide">
-                <span class="card-label">Хэштеги</span>
-                <div class="hashtags">
-                    {% for tag in result.hashtags %}
-                        <span>{{ tag }}</span>
-                    {% endfor %}
-                </div>
-            </article>
         </section>
 
         <div class="actions">

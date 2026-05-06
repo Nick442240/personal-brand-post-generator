@@ -16,35 +16,62 @@
             </div>
         </section>
 
+        <section class="function-block">
+            <p class="eyebrow">Сайт с функцией</p>
+            <h2>Как работает функция</h2>
+            <div class="function-flow">
+                <article>
+                    <strong>Вход</strong>
+                    <p>Пользователь вводит тему, аудиторию, площадку и стиль текста.</p>
+                </article>
+                <article>
+                    <strong>Действие</strong>
+                    <p>Сайт собирает пост по шаблону с учетом выбранного стиля.</p>
+                </article>
+                <article>
+                    <strong>Результат</strong>
+                    <p>Пользователь получает готовый текст и может его скопировать.</p>
+                </article>
+            </div>
+        </section>
+
         <section class="generator-layout">
             <form class="form-card" action="/" method="post">
+                {% if errors %}
+                    <div class="alert">
+                        {% for error in errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <label>
                     <span>Тема поста</span>
-                    <input type="text" name="topic" placeholder="Например: как экспертам вести Telegram" required>
+                    <input type="text" name="topic" value="{{ form_data.get('topic', '') }}" placeholder="Например: как экспертам вести Telegram">
                 </label>
 
                 <label>
                     <span>Целевая аудитория</span>
-                    <input type="text" name="audience" placeholder="Например: начинающие консультанты" required>
+                    <input type="text" name="audience" value="{{ form_data.get('audience', '') }}" placeholder="Например: начинающие консультанты">
                 </label>
 
                 <div class="field-grid">
                     <label>
                         <span>Площадка</span>
                         <select name="platform">
-                            <option>Telegram</option>
-                            <option>VK</option>
-                            <option>Блог</option>
+                            <option {% if form_data.get('platform') == 'Telegram' %}selected{% endif %}>Telegram</option>
+                            <option {% if form_data.get('platform') == 'VK' %}selected{% endif %}>VK</option>
+                            <option {% if form_data.get('platform') == 'Блог' %}selected{% endif %}>Блог</option>
                         </select>
                     </label>
 
                     <label>
                         <span>Стиль текста</span>
                         <select name="style">
-                            <option>Экспертный</option>
-                            <option>Дружелюбный</option>
-                            <option>Продающий</option>
-                            <option>Вдохновляющий</option>
+                            <option {% if form_data.get('style') == 'Экспертный' %}selected{% endif %}>Экспертный</option>
+                            <option {% if form_data.get('style') == 'Дружелюбный' %}selected{% endif %}>Дружелюбный</option>
+                            <option {% if form_data.get('style') == 'Продающий' %}selected{% endif %}>Продающий</option>
+                            <option {% if form_data.get('style') == 'Вдохновляющий' %}selected{% endif %}>Вдохновляющий</option>
                         </select>
                     </label>
                 </div>

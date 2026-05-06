@@ -12,27 +12,71 @@ PLATFORM_HINTS = {
 
 STYLE_SETTINGS = {
     "Экспертный": {
-        "opening": "Разберите тему через опыт, факты и практические выводы.",
+        "title": "{topic}: что важно понять аудитории «{audience}»",
+        "opening": (
+            "Разберем тему спокойно и по делу. Для аудитории «{audience}» важно не просто узнать "
+            "о теме «{topic}», а понять, как применить это в реальной работе."
+        ),
+        "structure": [
+            "Кратко обозначьте проблему и почему она влияет на результат.",
+            "Дайте контекст: где чаще всего возникает эта ситуация.",
+            "Разберите 2-3 практических принципа без лишней теории.",
+            "Добавьте нейтральный пример без персональных данных.",
+            "Завершите выводом, который можно применить сразу.",
+        ],
         "cta": "Сохраните пост и используйте этот подход в ближайшей публикации.",
     },
     "Дружелюбный": {
-        "opening": "Покажите тему простым языком, будто объясняете ее хорошему знакомому.",
+        "title": "{topic}: как разобраться без лишнего напряжения",
+        "opening": (
+            "Давайте простыми словами. Если вы относитесь к аудитории «{audience}», тема «{topic}» "
+            "может казаться большой, но ее проще понять через несколько понятных шагов."
+        ),
+        "structure": [
+            "Начните с ситуации, в которой читатель может узнать себя.",
+            "Объясните тему простым языком, без сложных терминов.",
+            "Покажите, какую маленькую пользу можно получить уже сейчас.",
+            "Добавьте теплый пример или бытовую аналогию.",
+            "Задайте вопрос, чтобы читателю было легко откликнуться.",
+        ],
         "cta": "Напишите в комментариях, какая мысль оказалась самой полезной.",
     },
     "Продающий": {
-        "opening": "Сразу покажите проблему, ценность решения и следующий шаг для читателя.",
+        "title": "{topic}: как получить больше пользы без хаоса",
+        "opening": (
+            "У аудитории «{audience}» часто нет времени на долгие объяснения. Поэтому пост про "
+            "«{topic}» должен быстро показать проблему, ценность решения и понятный следующий шаг."
+        ),
+        "structure": [
+            "Назовите боль или потерю, которую читатель хочет избежать.",
+            "Покажите, какую конкретную пользу дает правильный подход.",
+            "Опишите короткий путь от проблемы к решению.",
+            "Добавьте аргумент доверия: опыт, наблюдение или мини-кейс без личных данных.",
+            "Завершите четким предложением действия.",
+        ],
         "cta": "Оставьте заявку или напишите в личные сообщения, если хотите разобрать это под вашу задачу.",
     },
     "Вдохновляющий": {
-        "opening": "Свяжите тему с личным ростом, переменами и маленькими действиями.",
+        "title": "{topic}: маленький шаг, который может многое изменить",
+        "opening": (
+            "Иногда именно тема «{topic}» помогает аудитории «{audience}» увидеть новую точку роста. "
+            "Не обязательно менять все сразу: достаточно начать с одного осознанного действия."
+        ),
+        "structure": [
+            "Начните с эмоционального наблюдения или сильной мысли.",
+            "Покажите, почему эта тема может стать точкой изменения.",
+            "Поддержите читателя: путь можно проходить постепенно.",
+            "Предложите 2-3 простых шага для первого движения вперед.",
+            "Закончите мотивирующим выводом и приглашением к действию.",
+        ],
         "cta": "Выберите один шаг из поста и попробуйте применить его уже сегодня.",
     },
 }
 
 
-def normalize_text(value, fallback):
+def normalize_text(value):
     cleaned = " ".join(value.strip().split())
-    return cleaned if cleaned else fallback
+    return cleaned
 
 
 def make_hashtag(text):
@@ -48,19 +92,12 @@ def generate_post(topic, audience, platform, style):
     platform_hint = PLATFORM_HINTS.get(platform, PLATFORM_HINTS["Telegram"])
     style_data = STYLE_SETTINGS.get(style, STYLE_SETTINGS["Экспертный"])
 
-    title = f"{topic}: как раскрыть тему для аудитории «{audience}»"
+    title = style_data["title"].format(topic=topic, audience=audience)
     intro = (
-        f"Этот пост можно начать с наблюдения: аудитории «{audience}» важно быстро понять, "
-        f"почему тема «{topic}» касается их работы, целей или повседневных решений. "
-        f"Для площадки {platform} лучше подать материал {platform_hint}."
+        f"{style_data['opening'].format(topic=topic, audience=audience)} "
+        f"Для площадки {platform} подайте материал {platform_hint}."
     )
-    structure = [
-        f"Зацепка: обозначьте знакомую ситуацию или боль, связанную с темой «{topic}».",
-        f"Контекст: объясните, почему это особенно важно для аудитории «{audience}».",
-        f"Польза: дайте 2-3 практических вывода, которые читатель сможет применить.",
-        f"Пример: добавьте короткий сценарий, кейс или личное наблюдение без персональных данных.",
-        "Финал: подведите к простому действию, вопросу или следующему шагу.",
-    ]
+    structure = style_data["structure"]
     cta = style_data["cta"]
     hashtags = [
         make_hashtag(topic),
@@ -70,7 +107,7 @@ def generate_post(topic, audience, platform, style):
     full_post = "\n\n".join(
         [
             title,
-            f"Вступление:\n{style_data['opening']} {intro}",
+            f"Вступление:\n{intro}",
             "Структура:\n"
             + "\n".join(
                 f"{index}. {item}" for index, item in enumerate(structure, start=1)
@@ -82,7 +119,7 @@ def generate_post(topic, audience, platform, style):
 
     return {
         "title": title,
-        "intro": f"{style_data['opening']} {intro}",
+        "intro": intro,
         "structure": structure,
         "cta": cta,
         "hashtags": hashtags,
@@ -99,14 +136,31 @@ def generate_post(topic, audience, platform, style):
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        topic = normalize_text(request.form.get("topic", ""), "личный бренд")
-        audience = normalize_text(request.form.get("audience", ""), "начинающие эксперты")
+        topic = normalize_text(request.form.get("topic", ""))
+        audience = normalize_text(request.form.get("audience", ""))
         platform = request.form.get("platform", "Telegram")
         style = request.form.get("style", "Экспертный")
+
+        errors = []
+        if not topic:
+            errors.append("Введите тему поста, чтобы сайт мог собрать идею.")
+        if not audience:
+            errors.append("Введите целевую аудиторию, чтобы текст был точнее.")
+
+        form_data = {
+            "topic": topic,
+            "audience": audience,
+            "platform": platform,
+            "style": style,
+        }
+
+        if errors:
+            return render_template("index.html", errors=errors, form_data=form_data)
+
         result = generate_post(topic, audience, platform, style)
         return render_template("result.html", result=result)
 
-    return render_template("index.html")
+    return render_template("index.html", errors=[], form_data={})
 
 
 if __name__ == "__main__":

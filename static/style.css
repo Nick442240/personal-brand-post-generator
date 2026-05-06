@@ -90,6 +90,8 @@ h1 {
 .form-card,
 .side-panel,
 .steps article,
+.function-flow article,
+.input-grid article,
 .copy-panel,
 .result-card {
     border: 1px solid var(--line);
@@ -103,6 +105,23 @@ h1 {
     display: grid;
     gap: 22px;
     padding: clamp(24px, 4vw, 40px);
+}
+
+.alert {
+    border: 1px solid rgba(236, 72, 153, 0.38);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: #fecdd3;
+    background: rgba(236, 72, 153, 0.12);
+}
+
+.alert p {
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+.alert p + p {
+    margin-top: 6px;
 }
 
 label {
@@ -198,6 +217,7 @@ select option {
 }
 
 .side-panel h2,
+.function-block h2,
 .steps h2 {
     margin-bottom: 18px;
     font-size: 1.45rem;
@@ -221,6 +241,41 @@ select option {
 
 .steps {
     margin-top: 26px;
+}
+
+.function-block {
+    margin-bottom: 24px;
+    padding: clamp(22px, 3vw, 30px);
+    border-radius: 8px;
+    background:
+        linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(236, 72, 153, 0.08)),
+        rgba(20, 23, 43, 0.34);
+}
+
+.function-flow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.function-flow article,
+.input-grid article {
+    padding: 18px;
+    box-shadow: none;
+    background: rgba(255, 255, 255, 0.055);
+}
+
+.function-flow strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #e0f2fe;
+    font-size: 1.05rem;
+}
+
+.function-flow p {
+    margin-bottom: 0;
+    color: var(--muted);
+    line-height: 1.55;
 }
 
 .steps-grid {
@@ -256,6 +311,48 @@ select option {
 
 .result-page {
     max-width: 1040px;
+}
+
+.input-summary {
+    margin-bottom: 20px;
+    padding: clamp(22px, 3vw, 30px);
+    border-radius: 8px;
+    background:
+        linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.08)),
+        rgba(20, 23, 43, 0.34);
+}
+
+.input-summary h2,
+.section-heading h2 {
+    margin-bottom: 18px;
+    font-size: clamp(1.45rem, 3vw, 2.05rem);
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.input-grid article span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+.input-grid article strong {
+    display: block;
+    color: var(--text);
+    line-height: 1.35;
+}
+
+.result-section {
+    margin-bottom: 20px;
+}
+
+.section-heading {
+    margin-bottom: 16px;
 }
 
 .copy-panel {
@@ -388,6 +485,8 @@ select option {
 
     .generator-layout,
     .field-grid,
+    .function-flow,
+    .input-grid,
     .steps-grid,
     .result-grid {
         grid-template-columns: 1fr;
@@ -396,6 +495,8 @@ select option {
     .form-card,
     .side-panel,
     .steps article,
+    .function-flow article,
+    .input-grid article,
     .copy-panel,
     .result-card {
         box-shadow: 0 16px 42px rgba(0, 0, 0, 0.36);
