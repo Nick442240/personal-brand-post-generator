@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Готовая идея поста</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="page-shell result-page">
+        <section class="hero hero--compact">
+            <div class="hero__content">
+                <p class="eyebrow">{{ result.meta.platform }} · {{ result.meta.style }}</p>
+                <h1>Готовая идея поста</h1>
+                <p class="subtitle">Тема: {{ result.meta.topic }} · Аудитория: {{ result.meta.audience }}</p>
+            </div>
+        </section>
+
+        <section class="copy-panel">
+            <div class="copy-panel__header">
+                <div>
+                    <span class="card-label">Итоговый пост</span>
+                    <h2>Готовый блок для копирования</h2>
+                </div>
+                <button class="gradient-button copy-button" type="button" data-copy-button>
+                    Скопировать пост
+                </button>
+            </div>
+            <pre class="post-preview" id="final-post">{{ result.full_post }}</pre>
+            <p class="copy-status" data-copy-status aria-live="polite"></p>
+        </section>
+
+        <section class="result-grid">
+            <article class="result-card result-card--wide">
+                <span class="card-label">Заголовок</span>
+                <h2>{{ result.title }}</h2>
+            </article>
+
+            <article class="result-card result-card--wide">
+                <span class="card-label">Короткое вступление</span>
+                <p>{{ result.intro }}</p>
+            </article>
+
+            <article class="result-card">
+                <span class="card-label">Структура</span>
+                <ol class="structure-list">
+                    {% for item in result.structure %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ol>
+            </article>
+
+            <article class="result-card">
+                <span class="card-label">Призыв к действию</span>
+                <p class="cta-text">{{ result.cta }}</p>
+            </article>
+
+            <article class="result-card result-card--wide">
+                <span class="card-label">Хэштеги</span>
+                <div class="hashtags">
+                    {% for tag in result.hashtags %}
+                        <span>{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </article>
+        </section>
+
+        <div class="actions">
+            <button class="gradient-button copy-button" type="button" data-copy-button>
+                Скопировать пост
+            </button>
+            <a class="secondary-button" href="/">Создать новый пост</a>
+        </div>
+    </main>
+
+    <script>
+        const finalPost = document.querySelector("#final-post");
+        const copyButtons = document.querySelectorAll("[data-copy-button]");
+        const copyStatus = document.querySelector("[data-copy-status]");
+
+        async function copyPost() {
+            const text = finalPost.innerText.trim();
+
+            try {
+                await navigator.clipboard.writeText(text);
+                copyStatus.textContent = "Пост скопирован в буфер обмена.";
+                copyButtons.forEach((button) => {
+                    button.textContent = "Скопировано";
+                });
+            } catch (error) {
+                copyStatus.textContent = "Не удалось скопировать автоматически. Выделите текст вручную.";
+            }
+
+            window.setTimeout(() => {
+                copyButtons.forEach((button) => {
+                    button.textContent = "Скопировать пост";
+                });
+            }, 2200);
+        }
+
+        copyButtons.forEach((button) => {
+            button.addEventListener("click", copyPost);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор постов для личного бренда</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="hero">
+            <div class="hero__content">
+                <p class="eyebrow">Локальный Flask-инструмент</p>
+                <h1>Генератор постов для личного бренда</h1>
+                <p class="subtitle">Соберите идею, структуру и стиль поста за пару минут</p>
+            </div>
+        </section>
+
+        <section class="generator-layout">
+            <form class="form-card" action="/" method="post">
+                <label>
+                    <span>Тема поста</span>
+                    <input type="text" name="topic" placeholder="Например: как экспертам вести Telegram" required>
+                </label>
+
+                <label>
+                    <span>Целевая аудитория</span>
+                    <input type="text" name="audience" placeholder="Например: начинающие консультанты" required>
+                </label>
+
+                <div class="field-grid">
+                    <label>
+                        <span>Площадка</span>
+                        <select name="platform">
+                            <option>Telegram</option>
+                            <option>VK</option>
+                            <option>Блог</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Стиль текста</span>
+                        <select name="style">
+                            <option>Экспертный</option>
+                            <option>Дружелюбный</option>
+                            <option>Продающий</option>
+                            <option>Вдохновляющий</option>
+                        </select>
+                    </label>
+                </div>
+
+                <button class="gradient-button" type="submit">Сгенерировать идею</button>
+            </form>
+
+            <aside class="side-panel">
+                <h2>Примеры тем</h2>
+                <div class="topic-tags">
+                    <span>Как найти свою нишу</span>
+                    <span>Ошибки в экспертном контенте</span>
+                    <span>История профессионального пути</span>
+                    <span>Как упаковать услугу</span>
+                    <span>Почему клиенты доверяют эксперту</span>
+                </div>
+            </aside>
+        </section>
+
+        <section class="steps">
+            <h2>Как это работает</h2>
+            <div class="steps-grid">
+                <article>
+                    <strong>1</strong>
+                    <h3>Опишите идею</h3>
+                    <p>Введите тему и аудиторию, для которой хотите подготовить публикацию.</p>
+                </article>
+                <article>
+                    <strong>2</strong>
+                    <h3>Выберите формат</h3>
+                    <p>Укажите площадку и стиль, чтобы результат звучал уместно.</p>
+                </article>
+                <article>
+                    <strong>3</strong>
+                    <h3>Получите основу</h3>
+                    <p>Сайт соберет заголовок, вступление, структуру, CTA и хэштеги.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
