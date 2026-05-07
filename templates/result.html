@@ -83,17 +83,44 @@
             </div>
         </section>
 
-        <section class="copy-panel">
+        <section class="copy-panel" data-platform="{{ result.meta.platform }}">
             <div class="copy-panel__header">
                 <div>
-                    <span class="card-label">Единый текст для копирования</span>
-                    <h2>Готовый пост одним блоком</h2>
+                    <span class="card-label">Редактор и проверка поста</span>
+                    <h2>Финальная версия перед публикацией</h2>
                 </div>
-                <button class="gradient-button copy-button" type="button" data-copy-button>
-                    Скопировать пост
-                </button>
+                <div class="editor-actions">
+                    <button class="secondary-button save-button" type="button" data-save-button>
+                        Сохранить изменения
+                    </button>
+                    <button class="gradient-button copy-button" type="button" data-copy-button>
+                        Скопировать пост
+                    </button>
+                </div>
             </div>
-            <pre class="post-preview" id="final-post">{{ result.full_post }}</pre>
+
+            <label class="editor-field" for="final-post">
+                <span>Единый текст для копирования</span>
+                <textarea id="final-post" rows="16" data-post-editor>{{ result.full_post }}</textarea>
+            </label>
+
+            <div class="editor-meta">
+                <p class="platform-hint" data-platform-hint></p>
+                <p class="char-counter"><span data-char-count>0</span> символов</p>
+            </div>
+
+            <div class="quality-card">
+                <span class="card-label">Чек-лист качества</span>
+                <ul class="quality-list">
+                    <li data-check="title"><span></span>Есть заголовок</li>
+                    <li data-check="intro"><span></span>Есть вступление</li>
+                    <li data-check="cta"><span></span>Есть призыв к действию</li>
+                    <li data-check="hashtags"><span></span>Есть хэштеги</li>
+                    <li data-check="minLength"><span></span>Текст не слишком короткий</li>
+                    <li data-check="maxLength"><span></span>Текст не слишком длинный для выбранной площадки</li>
+                </ul>
+            </div>
+
             <p class="copy-status" data-copy-status aria-live="polite"></p>
         </section>
 
@@ -106,16 +133,77 @@
     </main>
 
     <script>
-        const finalPost = document.querySelector("#final-post");
+        const editorPanel = document.querySelector("[data-platform]");
+        const finalPost = document.querySelector("[data-post-editor]");
         const copyButtons = document.querySelectorAll("[data-copy-button]");
+        const saveButton = document.querySelector("[data-save-button]");
         const copyStatus = document.querySelector("[data-copy-status]");
+        const charCount = document.querySelector("[data-char-count]");
+        const platformHint = document.querySelector("[data-platform-hint]");
+        const checks = {
+            title: document.querySelector("[data-check='title']"),
+            intro: document.querySelector("[data-check='intro']"),
+            cta: document.querySelector("[data-check='cta']"),
+            hashtags: document.querySelector("[data-check='hashtags']"),
+            minLength: document.querySelector("[data-check='minLength']"),
+            maxLength: document.querySelector("[data-check='maxLength']")
+        };
+        const platform = editorPanel.dataset.platform;
+        const platformLimits = {
+            "Telegram": {
+                hint: "Оптимально до 1000–1500 символов",
+                max: 1500
+            },
+            "VK": {
+                hint: "Оптимально до 1500–2000 символов",
+                max: 2000
+            },
+            "Блог": {
+                hint: "Можно использовать более длинный текст",
+                max: 6000
+            }
+        };
+        const activeLimit = platformLimits[platform] || platformLimits["Telegram"];
+        let savedPost = finalPost.value.trim();
+
+        function setCheck(name, isOk) {
+            const item = checks[name];
+            const badge = item.querySelector("span");
+
+            item.classList.toggle("is-ok", isOk);
+            item.classList.toggle("is-warning", !isOk);
+            badge.textContent = isOk ? "OK" : "!";
+        }
+
+        function updateEditorState() {
+            const text = finalPost.value.trim();
+            const length = text.length;
+            const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
+
+            charCount.textContent = length;
+            platformHint.textContent = activeLimit.hint;
+
+            setCheck("title", lines.length > 0 && lines[0].length >= 8);
+            setCheck("intro", text.toLowerCase().includes("вступление:"));
+            setCheck("cta", text.toLowerCase().includes("призыв к действию:"));
+            setCheck("hashtags", text.includes("#"));
+            setCheck("minLength", length >= 200);
+            setCheck("maxLength", length <= activeLimit.max);
+        }
+
+        function savePost() {
+            savedPost = finalPost.value.trim();
+            copyStatus.textContent = "Изменения сохранены. Эта версия будет скопирована.";
+            updateEditorState();
+        }
 
         async function copyPost() {
-            const text = finalPost.innerText.trim();
+            savedPost = finalPost.value.trim();
+            const text = savedPost;
 
             try {
                 await navigator.clipboard.writeText(text);
-                copyStatus.textContent = "Пост скопирован в буфер обмена.";
+                copyStatus.textContent = "Финальная версия поста скопирована в буфер обмена.";
                 copyButtons.forEach((button) => {
                     button.textContent = "Скопировано";
                 });
@@ -133,6 +221,10 @@
         copyButtons.forEach((button) => {
             button.addEventListener("click", copyPost);
         });
+
+        saveButton.addEventListener("click", savePost);
+        finalPost.addEventListener("input", updateEditorState);
+        updateEditorState();
     </script>
 </body>
 </html>
