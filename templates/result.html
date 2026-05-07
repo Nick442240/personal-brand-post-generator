@@ -86,8 +86,8 @@
         <section class="copy-panel" data-platform="{{ result.meta.platform }}">
             <div class="copy-panel__header">
                 <div>
-                    <span class="card-label">Редактор и проверка поста</span>
-                    <h2>Финальная версия перед публикацией</h2>
+                    <span class="card-label">Редактор финального поста</span>
+                    <h2>Отредактируйте текст перед копированием</h2>
                 </div>
                 <div class="editor-actions">
                     <button class="secondary-button save-button" type="button" data-save-button>
@@ -100,13 +100,13 @@
             </div>
 
             <label class="editor-field" for="final-post">
-                <span>Единый текст для копирования</span>
+                <span>Полный текст поста</span>
                 <textarea id="final-post" rows="16" data-post-editor>{{ result.full_post }}</textarea>
             </label>
 
             <div class="editor-meta">
+                <p class="char-counter">Символов: <span data-char-count>0</span></p>
                 <p class="platform-hint" data-platform-hint></p>
-                <p class="char-counter"><span data-char-count>0</span> символов</p>
             </div>
 
             <div class="quality-card">
@@ -114,10 +114,11 @@
                 <ul class="quality-list">
                     <li data-check="title"><span></span>Есть заголовок</li>
                     <li data-check="intro"><span></span>Есть вступление</li>
+                    <li data-check="structure"><span></span>Есть структура или список</li>
                     <li data-check="cta"><span></span>Есть призыв к действию</li>
                     <li data-check="hashtags"><span></span>Есть хэштеги</li>
                     <li data-check="minLength"><span></span>Текст не слишком короткий</li>
-                    <li data-check="maxLength"><span></span>Текст не слишком длинный для выбранной площадки</li>
+                    <li data-check="maxLength"><span></span>Текст подходит по длине для выбранной площадки</li>
                 </ul>
             </div>
 
@@ -143,6 +144,7 @@
         const checks = {
             title: document.querySelector("[data-check='title']"),
             intro: document.querySelector("[data-check='intro']"),
+            structure: document.querySelector("[data-check='structure']"),
             cta: document.querySelector("[data-check='cta']"),
             hashtags: document.querySelector("[data-check='hashtags']"),
             minLength: document.querySelector("[data-check='minLength']"),
@@ -151,15 +153,15 @@
         const platform = editorPanel.dataset.platform;
         const platformLimits = {
             "Telegram": {
-                hint: "Оптимально до 1000–1500 символов",
+                hint: "Для Telegram лучше оставить текст компактным: примерно до 1500 символов",
                 max: 1500
             },
             "VK": {
-                hint: "Оптимально до 1500–2000 символов",
+                hint: "Для VK удобно использовать текст до 2000 символов",
                 max: 2000
             },
             "Блог": {
-                hint: "Можно использовать более длинный текст",
+                hint: "Для блога можно использовать более длинный и подробный текст",
                 max: 6000
             }
         };
@@ -172,20 +174,23 @@
 
             item.classList.toggle("is-ok", isOk);
             item.classList.toggle("is-warning", !isOk);
-            badge.textContent = isOk ? "OK" : "!";
+            badge.textContent = isOk ? "OK" : "Проверьте";
         }
 
         function updateEditorState() {
             const text = finalPost.value.trim();
             const length = text.length;
             const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
+            const lowerText = text.toLowerCase();
+            const hasList = /(^|\n)\s*(\d+\.|-|•)/.test(text);
 
             charCount.textContent = length;
             platformHint.textContent = activeLimit.hint;
 
             setCheck("title", lines.length > 0 && lines[0].length >= 8);
-            setCheck("intro", text.toLowerCase().includes("вступление:"));
-            setCheck("cta", text.toLowerCase().includes("призыв к действию:"));
+            setCheck("intro", lowerText.includes("вступление:"));
+            setCheck("structure", lowerText.includes("структура:") || hasList);
+            setCheck("cta", lowerText.includes("призыв к действию:"));
             setCheck("hashtags", text.includes("#"));
             setCheck("minLength", length >= 200);
             setCheck("maxLength", length <= activeLimit.max);
@@ -193,7 +198,7 @@
 
         function savePost() {
             savedPost = finalPost.value.trim();
-            copyStatus.textContent = "Изменения сохранены. Эта версия будет скопирована.";
+            copyStatus.textContent = "Изменения сохранены";
             updateEditorState();
         }
 

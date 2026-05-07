@@ -427,9 +427,12 @@ select option {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    gap: 12px 18px;
     margin-top: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.055);
 }
 
 .platform-hint,
@@ -442,6 +445,10 @@ select option {
 .char-counter {
     color: #e0f2fe;
     font-weight: 800;
+}
+
+.platform-hint {
+    flex: 1 1 320px;
 }
 
 .quality-card {
@@ -476,10 +483,11 @@ select option {
 .quality-list li span {
     display: inline-grid;
     flex: 0 0 auto;
-    width: 30px;
+    min-width: 30px;
     height: 30px;
     place-items: center;
     border-radius: 999px;
+    padding: 0 10px;
     font-size: 0.78rem;
     font-weight: 900;
 }
